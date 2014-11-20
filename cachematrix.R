@@ -7,17 +7,17 @@
 #it pulls cached data if no new data is available
 
 
-## Write a short comment describing this function
 
-makeCacheMatrix <- function(x = matrix(),nrow=2, ncol=2) {
-    m <- NULL
+
+makeCacheMatrix <- function(x = matrix(),nrow=2, ncol=2) {   #x is an assigned variable, a matrix function
+    m <- NULL  #set the matrix value to null, m is now an assigned variable
     set <- function(y) {
         x <<- y     #x takes on the value of y
         m <<- NULL  #m is set to NULL
     }
         
-    get <- function() x
-    setmatrix <- function(matrix) m <<- matrix  
+    get <- function() x   #this will return the value of the matrix, if it exists
+    setmatrix <- function(matrix) m <<- matrix  #cacheSolve will call this function, if necessary
     getmatrix <- function() m         #this function returns matrix 'm', is used in cacheSolve
     getinverse  <- function(solve) m  #this function creates the inverse of matrix 'm'
 
@@ -30,19 +30,21 @@ makeCacheMatrix <- function(x = matrix(),nrow=2, ncol=2) {
 
 
 ## Write a short comment describing this function
-## Return a matrix that is the inverse of 'x'
+## cacheSolve is a function that pulls the values of the matrix created in makeCacheMatrix
+#it pulls cached data if no new data is available
 
-cacheSolve <- function(x, ...) {
+cacheSolve <- function(x, ...) {    #the 'x' here refers to the 'x' created in makeCacheMatrix - because
+                                    #we are in the same environment
         
-    m <- x$getmatrix()    #m takes on the value of x from the getmatrix funciton
-    if(!is.null(m)) {
-        message("getting cached data")  #if m is null/has no values, give message "getting cached data"
-        return(m)
+    m <- x$getmatrix()    #m takes on the value of from the getmatrix function in makeCacheMatrix
+    if(!is.null(m)) {     #check to see if the matrix is NOT null (represented by the '!')
+        message("getting cached data")  #if m is null/has no values, then give message "getting cached data"
+        return(m)                       #and also return the cached matrix
     }
-    data <- x$get()
+    data <- x$get()        #if the matrix was null, then function works through these steps
     m <- solve(data, ...)  #solve function inverts the matrix, using data from get function in makeCache
     x$setmatrix(m)
-    x$getinverse(m)
+    x$getinverse(m)  #call the cached getinverse results from makeCacheMatrix
     m
 }
 
